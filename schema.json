@@ -1,0 +1,79 @@
+{
+    "$schema": "http://json-schema.org/draft/2020-12/schema",
+    "description": "Schema of i18n JSON files used in i18njs and i18npy",
+
+    "$defs": {
+        "pluralTuple": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": [
+                {
+                    "type": ["null", "integer"]
+                },
+                {
+                    "type": ["null", "integer"]
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+
+        "pluralForms": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/pluralTuple"
+            }
+        },
+
+        "values": {
+            "type": "object",
+            "patternProperties": {
+                "^[A-Za-z0-9 `~!@#$%^&*:;,.?(){}<>_+=-]+$": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/$defs/pluralForms"
+                        }
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
+
+        "context": {
+            "type": "object",
+            "properties": {
+                "matches": {
+                    "patternProperties": {
+                        "^[A-Za-z0-9 `~!@#$%^&*:;,.?(){}<>_+=-]+$": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "values": {
+                    "$ref": "#/$defs/values"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+
+    "type": "object",
+    "properties": {
+        "values": {
+            "$ref": "#/$defs/values"
+        },
+        "contexts": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/context"
+            }
+        }
+    },
+    "additionalProperties": false
+}
